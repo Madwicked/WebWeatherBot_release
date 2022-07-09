@@ -40,7 +40,7 @@ def change_data(key, user_id, value):  # функция записи состо�
     json.dump(
         data,
         open('data.json', 'w', encoding='utf-8'),
-        indent=4,
+        indent=4,       #отступы
         ensure_ascii=False,  # сохраняет русские символы
     )
 
@@ -51,7 +51,6 @@ def change_data(key, user_id, value):  # функция записи состо�
 def dispecher(message):
     #    print(states)
     user_id = str(message.from_user.id)
-
     state = data['states'].get(user_id, MAIN_STATE)
     if state == MAIN_STATE:  # В зависимости от на каком состоянии пользователь вызывает соответствующую функцию
         main_handler(message)
@@ -66,13 +65,11 @@ def main_handler(message):  # функция главного состояния
     if message.text == '/start':  # по команде /start создает кнопку "Погода"
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton('Погода'))
-
         bot.send_message(
             user_id,
             'Это бот погоды',
             reply_markup=markup,
         )  # Отправляет сообщение и меняет состояние пользователя на MAIN_STATE
-
         change_data('states', user_id, MAIN_STATE)
     # print(message)
     elif message.text.lower() == 'погода':  # если сразу отправляет погода, то добавляет 2 кнопки "мск" и "спб"
@@ -141,7 +138,11 @@ def parse_weather_data(message):
     city = resp['name']
     country = resp['sys']['country']
     msg = f'the weather in {city}: Temp is {temp}, feels like {feels_like}, State is {weather_state}, country is {country}'
-    bot.send_message(user_id, msg)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    markup.add(
+        *[types.KeyboardButton(button) for button in ['погода']]
+    )
+    bot.send_message(user_id, msg, reply_markup=markup)
 
 if __name__ == '__main__':
     bot.polling()
