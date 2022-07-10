@@ -74,10 +74,10 @@ def main_handler(message):  # функция главного состояния
         change_data('states', user_id, MAIN_STATE)
     # print(message)
     elif message.text.lower() == 'погода':  # если сразу отправляет погода, то добавляет 2 кнопки на которых будет написан результат переменных text1 и text2(число сегодня и завтра)
-        text1 = str(date.today().strftime('%m/%d/%y')) #date.today возвращает сегодняшнюю дату,
-                            # .strftime('%m/%d/%y') приводит к виду дд/мм/гг
+        text1 = str(date.today().strftime('%d/%m/%y')) #date.today возвращает сегодняшнюю дату,
+                            # .strftime('%d%m//%y') приводит к виду дд/мм/гг
         #print(text1)
-        text2 = str((date.today() + timedelta(1)).strftime('%m/%d/%y')) #timedelta прибавляет день (1) к сегодняшней дате
+        text2 = str((date.today() + timedelta(1)).strftime('%d/%m/%y')) #timedelta прибавляет день (1) к сегодняшней дате
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add(
             *[types.KeyboardButton(button) for button in [text1, text2]]
@@ -107,7 +107,7 @@ def city_handler(message):  # функция выбора города
   # функция выбора дня на который мы хотим получить погоду, выдает из словаря WEATHER
 def weather_date(message):
     user_id = str(message.from_user.id)
-    if message.text.lower() == str(date.today().strftime('%m/%d/%y')):  #создает 3 кнопки с городами или ждет
+    if message.text.lower() == str(date.today().strftime('%d/%m/%y')):  #создает 3 кнопки с городами или ждет
             #ввода другого города и в завиимости от того какую дату выбрал юзер, должен отправлять погоду на соответствующую дату, но пока только на сегодня
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add(
@@ -118,7 +118,7 @@ def weather_date(message):
         change_data('states', user_id, CITY_STATE)
         #city = data[WEATHER_DATE_STATE][user_id]
 
-    elif message.text == str((date.today() + timedelta(1)).strftime('%m/%d/%y')):
+    elif message.text == str((date.today() + timedelta(1)).strftime('%d/%m/%y')):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add(
             *[types.KeyboardButton(button) for button in ['москва', 'санкт-петербург', 'уфа']]
